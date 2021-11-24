@@ -5,7 +5,7 @@
 
 {% block content %}
 <div class="container">
-    <form method="POST" class="form-group">
+    <form action="." method="POST" class="form-group">
         {% csrf_token %}
         {{ form|crispy }}
         <div class= "text-center">

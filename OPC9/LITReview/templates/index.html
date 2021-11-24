@@ -1,6 +1,7 @@
 {% extends 'navbar.html' %}
 
 {% load static %}
+{% load crispy_forms_tags %}
 
 {% block content %}
 
@@ -12,12 +13,12 @@
         </div>
         <div class="col-6">
             <h1>Connexion</h1>
-            <form method="POST" action="/action_page.php">
-                <label for="fname">Nom d'utilisateur :</label><br>
-                <input type="text" id="id" name="id"><br>
-                <label for="lname">Mot de passe :</label><br>
-                <input type="password" id="password" name="password"><br><br>
-                <input class="btn btn-primary" type="submit" value="Se connecter">
+            <form action="." method="POST" class="form-group">
+                {% csrf_token %}
+                {{ form|crispy }}
+                <div class= "text-center">
+                <button onclick="location.href = '/'" type="button" class="btn btn-primary">Retour</button>
+                <button type="submit" class="btn btn-primary">Se connecter</button>
             </form>
         </div>
     </div>
