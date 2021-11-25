@@ -23,7 +23,7 @@ class Review(models.Model):
         # validates that rating must be between 0 and 5
         validators=[MinValueValidator(0), MaxValueValidator(5)])
     headline = models.CharField(max_length=128)
-    body = models.CharField(max_length=8192, blank=True)
+    body = models.TextField(max_length=8192, blank=True)
     user = models.ForeignKey(
         to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     time_created = models.DateTimeField(auto_now_add=True)
@@ -34,11 +34,10 @@ class Review(models.Model):
 
 class UserFollows(models.Model):
     user = models.ForeignKey(to=User, on_delete=models.CASCADE,
-    related_name='followed_by')
+                             related_name='followed_by')
     followed_user = models.ForeignKey(to=User, on_delete=models.CASCADE,
-    related_name='followed_user')
+                                      related_name='followed_user')
 
-    
     class Meta:
         # ensures we don't get multiple UserFollows instances
         # for unique user-user_followed pairs
