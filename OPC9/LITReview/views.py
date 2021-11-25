@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from .models import Ticket, Review, User
 
 # Create your views here.
 
@@ -46,4 +47,6 @@ def profile(request):
 
 
 def flux(request):
-    return render(request, 'flux.html', {})
+    reviews = Review.objects.all
+    tickets = Ticket.objects.all
+    return render(request, 'flux.html', {"reviews": reviews, "tickets": tickets})
