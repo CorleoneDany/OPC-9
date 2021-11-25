@@ -20,6 +20,7 @@ from LITReview import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.home),
+    path('logout/', views.disconnect),
     path('register/', views.register),
     path('profile/', views.profile),
-    path('flux/', views.flux),] 
+    path('flux/', views.flux), ]
