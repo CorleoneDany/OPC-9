@@ -1,0 +1,14 @@
+<span class="border">
+    <div class="row">
+        <text> {{ review.user }} a demandé une critique. </text>
+        <text> {{ review.headline }} </text>
+    </div>
+    <div class="ratings">
+        {% for star in review.ratings %}
+            <span class="fa fa-star checked"></span>
+        {% endfor %}
+    </div>
+    <p> {{ review.body }} </p>
+    {% if review.ticket %}
+    {% endif %}
+</span>
