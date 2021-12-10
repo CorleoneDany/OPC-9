@@ -17,10 +17,18 @@ from django.contrib import admin
 from django.urls import path
 from LITReview import views
 
+from django.conf import settings
+from django.conf.urls.static import static
+
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.home),
-    path('logout/', views.disconnect),
-    path('register/', views.register),
-    path('profile/', views.profile),
-    path('flux/', views.flux), ]
+    path('', views.home, name='home'),
+    path('logout/', views.disconnect, name='logout'),
+    path('register/', views.register, name='register'),
+    path('profile/', views.profile, name='profile'),
+    path('flux/', views.flux, name='flux'),
+    path('new_ticket/', views.create_ticket, name='new_ticket'),
+    path('new_ticket/<int:id_ticket>', views.create_ticket, name='new_ticket'),
+    path('new_review/', views.create_review, name='new_review'),
+    path('new_review/<int:id_review>', views.create_review, name='new_review'),
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
