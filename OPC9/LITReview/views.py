@@ -23,7 +23,7 @@ def home(request):
             password = form.cleaned_data.get('password')
             user = authenticate(username=username, password=password)
             login(request, user)
-            return redirect('/flux/')
+            return redirect('flux')
 
     return render(request, 'index.html', {"form": form})
 
@@ -49,20 +49,6 @@ def disconnect(request):
 
 
 def profile(request):
-    return render(request, 'profile.html', {})
-
-
-def create_review(request):
-    form = ReviewForm
-    return render(request, 'create_review.html', {"form": form})
-
-
-def create_ticket(request):
-    form = TicketForm
-    return render(request, 'create_ticket.html', {"form": form})
-
-
-def flux(request):
     reviews = get_users_viewable_reviews(request.user)
     # returns queryset of reviews
     reviews = reviews.annotate(content_type=Value('REVIEW', CharField()))
@@ -72,9 +58,65 @@ def flux(request):
     tickets = tickets.annotate(content_type=Value('TICKET', CharField()))
 
     # combine and sort the two types of posts
-    posts = sorted(
+    posts = sort_posts(reviews, tickets)
+    print(posts)
+
+    return render(request, 'profile.html', {'posts': posts})
+
+
+def create_review(request, id_review=None):
+    review_instance = Review.objects.get(
+        id_review) if id_review is not None else None
+    if request.method == 'GET':
+        form = ReviewForm(instance=review_instance)
+        return render(request, 'create_review.html', {"form": form})
+
+    elif request.method == 'POST':
+        form = ReviewForm(data=request.POST, instance=review_instance)
+        if form.is_valid():
+            validated_form = form.save(commit=False)
+            validated_form.user = request.user
+            validated_form.save()
+            return redirect('flux')
+    return render(request, 'create_review.html', {"form": form})
+
+
+def create_ticket(request, id_article=None):
+    ticket_instance = Ticket.objects.get(
+        id_article) if id_article is not None else None
+    if request.method == 'GET':
+        form = TicketForm(instance=ticket_instance)
+        return render(request, 'create_ticket.html', {"form": form})
+
+    elif request.method == 'POST':
+        form = TicketForm(data=request.POST)
+        if form.is_valid():
+            validated_form = form.save(commit=False)
+            validated_form.user = request.user
+            validated_form.save()
+            return redirect('flux')
+    return render(request, 'create_ticket.html', {"form": form})
+
+
+def flux(request):
+
+    posts = get_all_posts()
+    return render(request, 'flux.html', {"posts": posts})
+
+
+def get_all_posts():
+    reviews = Review.objects.all()
+    tickets = Ticket.objects.all()
+    return sort_posts(reviews, tickets)
+
+
+def sort_posts(reviews, tickets):
+    return sorted(
         chain(reviews, tickets),
         key=lambda post: post.time_created,
         reverse=True
     )
-    return render(request, 'flux.html', {"posts": posts})
+
+
+def print_all_posts(reviews, tickets):
+    print(sort_posts(reviews, tickets))
