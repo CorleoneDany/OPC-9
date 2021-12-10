@@ -1,13 +1,20 @@
 {% extends 'navbar.html' %}
 
-{% load static %}
-
 {% block content %}
 
-<div class="container">
-    <div class="text-center">
-        <button type="button" class="btn btn-primary">Créer un ticket</button>
-        <button type="button" class="btn btn-primary">Créer une review</button>
+<div class="container text-center">
+    <div>
+        <button type="button" onclick="location.href='/new_ticket'" class="btn btn-primary">Demander une critique</button>
+        <button type="button"  onclick="location.href='/new_review'" class="btn btn-primary">Créer une critique</button>
+    </div>
+    <div class='posts'>
+        {% for post in posts %}
+            {% if post.type == 'Ticket' %}
+                {% include 'ticket_view.html' %}
+            {% elif post.type == 'Review' %}
+                {% include 'review_view.html' %}
+            {% endif %}
+        {% endfor %}
     </div>
 
 </div>

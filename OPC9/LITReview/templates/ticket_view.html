@@ -1,14 +1,18 @@
-<span class="border">
-    <div class="row">
-    {% if ticket.user.id == request.user.id %}
+{% load static %}
+
+<div class="border rounded">
+    <div class="justify-content-between flex">
+    {% if post.user.id == request.user.id %}
             <text> Vous avez demandé une critique. </text>
     {% else %}
-            <text> {{ ticket.user}} a demandé une critique. </text>
+            <text> {{ post.user}} a demandé une critique. </text>
     {% endif %}
-            <text> {{ ticket.time_created }}
+            <text> {{ post.time_created }}
     </div>
-    <h1> {{ ticket.title }} </h1>
-    <p> {{ ticket.description }} </p>
-    <img src="{{ ticket.image.url }}" class="img-fluid" alt="Image du ticket : {{ ticket.title }}">
+    <h1> {{ post.title }} </h1>
+    <p> {{ post.description }} </p>
+    {% if post.image %}
+        <img src="{{post.image.url}}" class="img-fluid" alt="Image du ticket : {{ post.title }}">
+    {% endif %}
     <button type="button" class="btn btn-primary">Créer une critique en réponse.</button>
-</span>
+</div>

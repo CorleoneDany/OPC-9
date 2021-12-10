@@ -1,14 +1,19 @@
-<span class="border">
-    <div class="row">
-        <text> {{ review.user }} a demandé une critique. </text>
-        <text> {{ review.headline }} </text>
+<div class="border rounded">
+    <div class="justify-content-between flex">
+    {% if post.user.id == request.user.id %}
+            <text> Vous avez publié une critique. </text>
+    {% else %}
+            <text> {{ post.user}} a publié une critique. </text>
+    {% endif %}
+            <text> {{ post.time_created }}
     </div>
+    <h1> {{ post.headline }} </h1>
     <div class="ratings">
-        {% for star in review.ratings %}
+        {% for star in post.ratings %}
             <span class="fa fa-star checked"></span>
         {% endfor %}
     </div>
-    <p> {{ review.body }} </p>
-    {% if review.ticket %}
+    <p> {{ post.body }} </p>
+    {% if post.ticket %}
     {% endif %}
-</span>
+</div>
