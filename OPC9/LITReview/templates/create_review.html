@@ -1,0 +1,17 @@
+{% extends 'navbar.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="container">
+
+    <h1>Créer une critique</h1>
+    <form action="." method="POST" class="form-group">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <div class= "text-center">
+            <button type="submit" class="btn btn-primary">Créer une critique.</button>
+        </div>
+    </form>
+</div>
+{% endblock %}
