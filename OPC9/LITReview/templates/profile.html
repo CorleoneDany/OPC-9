@@ -1,37 +1,17 @@
 {% extends 'navbar.html' %}
 
-{% load static %}
-
 {% block content %}
 
 <div class="container text-center">
-
-    <div>
-
-        <h1> Suivre d'autres utilisateurs. </h1>
-        
-        {{ form|crispy }}
-
-    </div>
-
-    <div>
-        <h1> Abonnements. </h1>
-        {% for following in followings  %}
-            <div class="row"> 
-                <text> {{ following.username }} </text>
-                <button type="button" class="btn btn-primary">Se désabonner.</button>  
-            </div>
+    <div class='posts'>
+        {% for post in posts %}
+            {% if post.type == 'Ticket' %}
+                {% include 'ticket_view.html' %}
+            {% elif post.type == 'Review' %}
+                {% include 'review_view.html' %}
+            {% endif %}
         {% endfor %}
     </div>
-
-    <div>
-        <h1> Abonnés. </h1>
-        {% for follower in followers  %}
-            <div class="row"> {{ follower.username }} </div>
-        {% endfor %}
-    </div>
-    
 </div>
 
-
-{% endblock %}
+{% endblock %}}

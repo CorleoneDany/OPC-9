@@ -1,6 +1,12 @@
 from django.contrib import admin
-from .models import Ticket, Review
+from .models import Ticket, Review, UserFollows
 
 # Register your models here.
-models = [Ticket, Review]
-admin.site.register(models)
+
+
+class SuperAdmin(admin.ModelAdmin):
+    readonly_fields = ('id',)
+
+
+models = [Ticket, Review, UserFollows]
+admin.site.register(models, SuperAdmin)

@@ -1,0 +1,28 @@
+{% extends 'navbar.html' %}
+
+{% load static %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="container">
+    <div class="text-center">
+        <h1>Modifier une critique.</h1>
+    </div>
+    <div class="border rounded bottom_space text-center">
+        <h1> {{ post.title }} </h1>
+        <p> {{ post.description }} </p>
+        {% if post.image %}
+            <img src="{{post.image.url}}" class="img-fluid" alt="Image du ticket : {{ post.title }}">
+        {% endif %}
+    </div>
+
+    <form action="/update_review/{{review_id}}" method="POST" class="form-group">
+        {% csrf_token %}
+        {{ review_form|crispy }}
+        <div class= "text-center">
+            <button type="submit" class="btn btn-primary">Modifier une critique.</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

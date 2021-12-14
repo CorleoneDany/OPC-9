@@ -1,0 +1,48 @@
+{% extends 'navbar.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+<div class="container text-center">
+
+    <div>
+        <h1> Suivre d'autres utilisateurs. </h1>
+        <form action="." method="POST" class="form-group">
+            {% csrf_token %}
+            {{ form|crispy }}
+            <div class= "text-center">
+                <button type="submit" class="btn btn-primary">Suivre.</button>
+            </div>
+        </form>
+    </div>
+
+    <div>
+        <h1> Abonnements. </h1>
+        {% if followings %}
+            {% for following in followings  %}
+                <div class="border row"> 
+                    <text> {{ following.user }} </text>
+                    <button type="button" class="btn btn-primary">Se désabonner.</button>        
+                </div>
+            {% endfor %}
+        {% else %}
+        <p> Vous n'êtes abonné à personne.</p>
+        {% endif %}
+    </div>
+
+    <div>
+        <h1> Abonnés. </h1>
+        {% if followers %}
+            {% for follower in followers  %}
+                <div class="border row"> {{ follower.user }} </div>
+            {% endfor %}
+        {% else %}
+        <p> Vous n'avez aucun abonné.</p>
+        {% endif %}
+    </div>
+    
+</div>
+
+
+{% endblock %}
