@@ -1,0 +1,21 @@
+{% extends 'navbar.html' %}
+
+{% load static %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="container">
+    <div class="text-center">
+        <h1>Modifier un ticket.</h1>
+    </div>
+
+    <form action="/update_ticket/{{ticket_id}}" method="POST" class="form-group">
+        {% csrf_token %}
+        {{ ticket_form|crispy }}
+        <div class= "text-center">
+            <button type="submit" class="btn btn-primary">Modifier un ticket.</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

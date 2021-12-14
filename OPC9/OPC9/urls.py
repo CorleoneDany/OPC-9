@@ -27,8 +27,11 @@ urlpatterns = [
     path('register/', views.register, name='register'),
     path('profile/', views.profile, name='profile'),
     path('flux/', views.flux, name='flux'),
+    path('subscriptions/', views.subscriptions, name='subscriptions'),
     path('new_ticket/', views.create_ticket, name='new_ticket'),
-    path('new_ticket/<int:id_ticket>', views.create_ticket, name='new_ticket'),
+    path('update_ticket/<int:id_ticket>',
+         views.update_ticket, name='update_ticket'),
     path('new_review/', views.create_review, name='new_review'),
-    path('new_review/<int:id_review>', views.create_review, name='new_review'),
+    path('update_review/<int:id_review>',
+         views.update_review, name='update_review'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

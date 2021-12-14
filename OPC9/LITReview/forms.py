@@ -1,4 +1,5 @@
-from django.forms import forms, ModelForm
+from django import forms
+from django.forms import ModelForm
 
 from .models import Review, Ticket, UserFollows
 
@@ -20,7 +21,9 @@ class TicketForm(ModelForm):
         exclude = ['user']
 
 
-class UserFollows(ModelForm):
+class UserFollowsForm(ModelForm):
     class Meta:
         model = UserFollows
-        fields = ['followed_user']
+        fields = ['user', 'followed_user']
+        labels = {'followed_user': 'Utilisateur à suivre :'}
+        exclude = ['user']

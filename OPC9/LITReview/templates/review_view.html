@@ -1,4 +1,4 @@
-<div class="border rounded">
+<div class="border rounded bottom_space">
     <div class="justify-content-between flex">
     {% if post.user.id == request.user.id %}
             <text> Vous avez publié une critique. </text>
@@ -14,6 +14,11 @@
         {% endfor %}
     </div>
     <p> {{ post.body }} </p>
-    {% if post.ticket %}
-    {% endif %}
+    {% if post.user.id == request.user.id %}
+    <div class="col">
+        <form action="/update_review/{{post.id}}" method="GET">
+            <button type="submit" class="btn btn-primary">Modifier votre critique.</button>
+        </form>
+    </div>
+{% endif %}
 </div>

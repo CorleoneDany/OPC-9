@@ -3,7 +3,7 @@
 {% block content %}
 
 <div class="container text-center">
-    <div>
+    <div class="bottom_space">
         <button type="button" onclick="location.href='/new_ticket'" class="btn btn-primary">Demander une critique</button>
         <button type="button"  onclick="location.href='/new_review'" class="btn btn-primary">Créer une critique</button>
     </div>
@@ -16,7 +16,6 @@
             {% endif %}
         {% endfor %}
     </div>
-
 </div>
 
 {% endblock %}}
