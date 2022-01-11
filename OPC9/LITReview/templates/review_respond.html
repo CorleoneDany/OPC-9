@@ -7,7 +7,7 @@
 {% block content %}
 <div class="container">
     <div class="text-center">
-        <h1>Modifier une critique.</h1>
+        <h1>Répondre à un ticket.</h1>
     </div>
     <div class="border rounded bottom_space text-center">
         <h1> {{ post.title }} </h1>
@@ -17,11 +17,11 @@
         {% endif %}
     </div>
 
-    <form action="/update_review/{{review_id}}" method="POST" class="form-group">
+    <form action="/review_respond/{{post.id}}" method="POST" class="form-group">
         {% csrf_token %}
         {{ review_form|crispy }}
         <div class= "text-center">
-            <button type="submit" class="btn btn-primary bottom_space">Modifier une critique.</button>
+            <button type="submit" class="btn btn-primary bottom_space">Poster une critique.</button>
         </div>
     </form>
 </div>

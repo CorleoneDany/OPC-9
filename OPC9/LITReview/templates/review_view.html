@@ -1,4 +1,4 @@
-<div class="border rounded bottom_space">
+<div class="border rounded bottom_space animate__animated animate__fadeInRight post">
     <div class="justify-content-between flex">
     {% if post.user.id == request.user.id %}
             <text> Vous avez publié une critique. </text>
@@ -17,8 +17,35 @@
     {% if post.user.id == request.user.id %}
     <div class="col">
         <form action="/update_review/{{post.id}}" method="GET">
-            <button type="submit" class="btn btn-primary">Modifier votre critique.</button>
+            <button type="submit" class="btn btn-primary bottom_space">Modifier votre critique.</button>
         </form>
     </div>
-{% endif %}
+    {% endif %}
+
+    <div class="border rounded bottom_space animate__animated animate__fadeInRight ticket_review">
+        <div class="justify-content-between flex">
+        {% if post.ticket.user.id == request.user.id %}
+            <text> Vous avez demandé une critique. </text>
+        {% else %}
+            <text> {{ post.ticket.user}} a demandé une critique. </text>
+        {% endif %}
+            <text> {{ post.ticket.time_created }}
+        </div>
+        <h1> {{ post.ticket.title }} </h1>
+        <p> {{ post.ticket.description }} </p>
+        {% if post.ticket.image %}
+            <img src="{{post.ticket.image.url}}" class="img-fluid ticket_img bottom_space" alt="Image du ticket : {{ post.ticket.title }}">
+        {% endif %}
+        <div class="row">
+            {% if post.ticket.user.id == request.ticket.user.id %}
+                <div class="col">
+                    <form action="/update_ticket/{{post.ticket.id}}" method="GET">
+                        <button type="submit" class="btn btn-primary bottom_space">Modifier votre ticket.</button>
+                    </form>
+                </div>
+            {% endif %}
+        </div>
+    
+    </div>
+
 </div>

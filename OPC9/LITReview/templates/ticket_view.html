@@ -1,6 +1,6 @@
 {% load static %}
 
-<div class="border rounded bottom_space">
+<div class="border rounded bottom_space animate__animated animate__fadeInRight post">
     <div class="justify-content-between flex">
     {% if post.user.id == request.user.id %}
         <text> Vous avez demandé une critique. </text>
@@ -12,18 +12,18 @@
     <h1> {{ post.title }} </h1>
     <p> {{ post.description }} </p>
     {% if post.image %}
-        <img src="{{post.image.url}}" class="img-fluid" alt="Image du ticket : {{ post.title }}">
+        <img src="{{post.image.url}}" class="img-fluid ticket_img bottom_space" alt="Image du ticket : {{ post.title }}">
     {% endif %}
     <div class="row">
         {% if post.user.id == request.user.id %}
             <div class="col">
                 <form action="/update_ticket/{{post.id}}" method="GET">
-                    <button type="submit" class="btn btn-primary">Modifier votre ticket.</button>
+                    <button type="submit" class="btn btn-primary bottom_space">Modifier votre ticket.</button>
                 </form>
             </div>
         {% endif %}
             <div class="col">
-                <form action="/new_review/{{post.id}}" method="GET">
+                <form action="/review_respond/{{post.id}}" method="GET">
                     <button type="submit" class="btn btn-primary bottom_space">Créer une critique en réponse.</button>
                 </form>
             </div>

@@ -4,7 +4,7 @@
 
 {% block content %}
 
-<div class="container text-center">
+<div class="container text-center animate__animated animate__fadeInRight">
 
     <div>
         <h1> Suivre d'autres utilisateurs. </h1>
@@ -21,7 +21,7 @@
         <h1> Abonnements. </h1>
         {% if followings %}
             {% for following in followings  %}
-                <div class="border row"> 
+                <div class="border row justify-content-between"> 
                     <text> {{ following.user }} </text>
                     <button type="button" class="btn btn-primary">Se désabonner.</button>        
                 </div>
@@ -33,12 +33,12 @@
 
     <div>
         <h1> Abonnés. </h1>
-        {% if followers %}
+        {% if followers%}
             {% for follower in followers  %}
                 <div class="border row"> {{ follower.user }} </div>
             {% endfor %}
         {% else %}
-        <p> Vous n'avez aucun abonné.</p>
+            <p> Vous n'avez aucun abonné.</p>
         {% endif %}
     </div>
     

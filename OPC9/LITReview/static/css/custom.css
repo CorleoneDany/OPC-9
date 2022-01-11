@@ -11,3 +11,16 @@
 .bottom_space{
     margin-bottom: 25px;
 }
+
+.ticket_review{
+    margin-left: 25px;
+    margin-right: 25px;
+}
+
+.post{
+    background-color: #808d915e;
+}
+
+.ticket_img{
+    max-width:400px;
+}

@@ -34,4 +34,7 @@ urlpatterns = [
     path('new_review/', views.create_review, name='new_review'),
     path('update_review/<int:id_review>',
          views.update_review, name='update_review'),
+    path('review_respond/', views.respond_to_ticket, name='review_respond'),
+    path('review_respond/<int:id_ticket>',
+         views.respond_to_ticket, name='review_respond'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

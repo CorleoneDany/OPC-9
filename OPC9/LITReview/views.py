@@ -3,6 +3,9 @@ from django.http import HttpResponse
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.views.generic import TemplateView
+from django.db.models import CharField, Value
+import pprint
+
 
 from .forms import ReviewForm, TicketForm, UserFollowsForm
 from .models import Ticket, Review, User, UserFollows
@@ -82,7 +85,21 @@ def update_review(request, id_review=None):
 
 
 def respond_to_ticket(request, id_ticket=None):
-    pass
+    post = Ticket.objects.get(pk=id_ticket)
+    review_form = ReviewForm()
+
+    if request.method == 'GET':
+        ticket_id = post.id
+        return render(request, 'review_respond.html', {"review_form": review_form, "post": post, 'ticket_id': ticket_id})
+
+    if request.method == 'POST':
+        review_form = ReviewForm(data=request.POST)
+        if review_form.is_valid():
+            validated_review = review_form.save(commit=False)
+            validated_review.ticket_id = post.id
+            validated_review.user = request.user
+            validated_review.save()
+            return redirect('flux')
 
 
 def create_review(request):
@@ -153,7 +170,16 @@ def flux(request):
 
 def get_all_posts():
     reviews = Review.objects.all()
+    reviews = reviews.annotate(content_type=Value('REVIEW', CharField()))
+
     tickets = Ticket.objects.all()
+    tickets = tickets.annotate(content_type=Value('TICKET', CharField()))
+
+    tickets_id_list = [review.ticket.id for review in reviews]
+
+    for ticket in tickets:
+        ticket.responded = 'True' if ticket.id in tickets_id_list else 'False'
+
     return sort_posts(reviews, tickets)
 
 
@@ -190,7 +216,7 @@ def return_all_followers(request):
 
 
 def return_all_followings(request):
-    return UserFollows.objects.filter(followed_user=request.user)
+    return UserFollows.objects.filter(followed_user=request.user).exclude(user=request.user)
 
 
 def print_all_posts(reviews, tickets):

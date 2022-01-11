@@ -14,12 +14,20 @@ class Ticket(models.Model):
                               upload_to='img')
     time_created = models.DateTimeField(auto_now_add=True)
 
-    def __str__(self):
-        return self.title
-
     @property
     def type(self):
         return 'Ticket'
+
+    def to_dict(self):
+        return {
+            'type': 'ticket',
+            'title': self.title,
+            'description': self.description,
+            'user': self.user,
+            'image': self.image,
+            'time_created': self.time_created,
+            'responded': ''
+        }
 
 
 class Review(models.Model):
@@ -33,12 +41,20 @@ class Review(models.Model):
         to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     time_created = models.DateTimeField(auto_now_add=True)
 
-    def __str__(self):
-        return self.headline
-
     @property
     def type(self):
         return 'Review'
+
+    def to_dict(self):
+        return {
+            'type': 'review',
+            'ticket': self.ticket.to_dict(),
+            'rating': self.rating,
+            'headline': self.headline,
+            'body': self.body,
+            'user': self.user,
+            'time_created': self.time_created
+        }
 
 
 class UserFollows(models.Model):

@@ -2,16 +2,16 @@
 
 {% block content %}
 
-<div class="container text-center">
+<div class="container text-center animate__animated animate__fadeInRight">
     <div class="bottom_space">
         <button type="button" onclick="location.href='/new_ticket'" class="btn btn-primary">Demander une critique</button>
         <button type="button"  onclick="location.href='/new_review'" class="btn btn-primary">Créer une critique</button>
     </div>
     <div class='posts'>
         {% for post in posts %}
-            {% if post.type == 'Ticket' %}
+            {% if post.content_type == 'TICKET' %}
                 {% include 'ticket_view.html' %}
-            {% elif post.type == 'Review' %}
+            {% elif post.content_type == 'REVIEW' %}
                 {% include 'review_view.html' %}
             {% endif %}
         {% endfor %}
