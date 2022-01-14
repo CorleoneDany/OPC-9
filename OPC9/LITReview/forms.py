@@ -10,6 +10,9 @@ class ReviewForm(ModelForm):
         fields = ['headline', 'rating', 'body', 'user']
         labels = {'headline': 'Titre', 'rating': 'Note', 'body': 'Critique'}
         exclude = ['user']
+        rating_choices = [(1, '1'), (2, '2'),
+                          (3, '3'), (4, '4'), (5, '5')]
+        widgets = {'rating': forms.RadioSelect(choices=rating_choices)}
 
 
 class TicketForm(ModelForm):
@@ -27,3 +30,4 @@ class UserFollowsForm(ModelForm):
         fields = ['user', 'followed_user']
         labels = {'followed_user': 'Utilisateur à suivre :'}
         exclude = ['user']
+        widgets = {'followed_user': forms.TextInput}
