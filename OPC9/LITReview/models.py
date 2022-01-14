@@ -45,6 +45,10 @@ class Review(models.Model):
     def type(self):
         return 'Review'
 
+    @property
+    def stars_count(self):
+        return ['★' for _ in range(self.rating)]
+
     def to_dict(self):
         return {
             'type': 'review',
@@ -62,6 +66,12 @@ class UserFollows(models.Model):
                              related_name='followed_by')
     followed_user = models.ForeignKey(to=User, on_delete=models.CASCADE,
                                       related_name='followed_user')
+
+    def to_dict(self):
+        return {
+            'user': self.user,
+            'followed_user': self.followed_user
+        }
 
     class Meta:
         # ensures we don't get multiple UserFollows instances
