@@ -178,8 +178,7 @@ def get_all_posts():
     tickets_id_list = [review.ticket.id for review in reviews]
 
     for ticket in tickets:
-        ticket.responded = 'True' if ticket.id in tickets_id_list else 'False'
-
+        ticket.responded = ticket.id in tickets_id_list
     return sort_posts(reviews, tickets)
 
 
@@ -212,11 +211,12 @@ def subscriptions(request):
 
 
 def return_all_followers(request):
-    return UserFollows.objects.filter(user=request.user)
+    return UserFollows.objects.filter(followed_user=request.user)
 
 
 def return_all_followings(request):
-    return UserFollows.objects.filter(followed_user=request.user).exclude(user=request.user)
+    followings = UserFollows.objects.filter(user=request.user)
+    return [following.followed_user for following in followings]
 
 
 def print_all_posts(reviews, tickets):

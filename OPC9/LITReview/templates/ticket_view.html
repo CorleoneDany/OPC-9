@@ -22,11 +22,13 @@
                 </form>
             </div>
         {% endif %}
+        {% if post.responded == False%}
             <div class="col">
                 <form action="/review_respond/{{post.id}}" method="GET">
                     <button type="submit" class="btn btn-primary bottom_space">Créer une critique en réponse.</button>
                 </form>
             </div>
+        {% endif %}
     </div>
 
 </div>
