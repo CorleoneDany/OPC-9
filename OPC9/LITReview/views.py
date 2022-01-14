@@ -201,12 +201,18 @@ def get_user_reviews(request):
 def subscriptions(request):
     followers = return_all_followers(request)
     followings = return_all_followings(request)
-    form = UserFollowsForm()
-    if request.method == 'POST' and form.is_valid():
-        validated_form = form.save(commit=False)
-        validated_form.user = request.user
-        validated_form.save()
-        return redirect('flux')
+    form = UserFollowsForm
+    if request.method == 'POST':
+        following_username = request.POST['followed_user']
+        following_instance = User.objects.filter(
+            username=following_username).first()
+        cleaned_post = {'followed_user': following_instance}
+        form = UserFollowsForm(data=cleaned_post)
+        if form.is_valid():
+            validated_form = form.save(commit=False)
+            validated_form.user = request.user
+            validated_form.save()
+            return redirect('flux')
     return render(request, 'subscriptions.html', {"form": form, "followers": followers, "followings": followings})
 
 
