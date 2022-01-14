@@ -6,9 +6,9 @@
 
 <div class="container text-center animate__animated animate__fadeInRight">
 
-    <div>
-        <h1> Suivre d'autres utilisateurs. </h1>
-        <form action="." method="POST" class="form-group">
+    <h1> Suivre d'autres utilisateurs. </h1>
+    <div class='w-50 inline-grid'>
+        <form action="." metdod="POST" class="form-group">
             {% csrf_token %}
             {{ form|crispy }}
             <div class= "text-center">
@@ -17,26 +17,44 @@
         </form>
     </div>
 
-    <div>
-        <h1> Abonnements. </h1>
+    <h1> Abonnements. </h1>
+    <div class='w-50 inline-grid'>
         {% if followings %}
-            {% for following in followings  %}
-                <div class="border row justify-content-between"> 
-                    <text> {{ following }} </text>
-                    <button type="button" class="btn btn-primary">Se désabonner.</button>        
-                </div>
-            {% endfor %}
+        <table class="table">
+            <tbody>
+                {% for following in followings  %}
+                <tr>
+                    <td>
+                            <text class='align-middle'> {{ following }} </text>
+                    </td>
+                    <td>
+                            <button type="button" class="btn btn-primary">Se désabonner.</button>
+                    </td>
+                </tr>      
+                {% endfor %}
+            </tbody>
+        </table>
+        
         {% else %}
         <p> Vous n'êtes abonné à personne.</p>
         {% endif %}
     </div>
 
-    <div>
-        <h1> Abonnés. </h1>
+    <h1> Abonnés. </h1>
+    <div class='w-50 inline-grid'>
         {% if followers%}
-            {% for follower in followers  %}
-                <div class="border row"> {{ follower.user }} </div>
-            {% endfor %}
+        <table class="table">
+            <tbody>
+                {% for follower in followers  %}
+                <tr>
+                    <td>
+                        <text> {{ follower.user }} </text>
+                    </td>
+                </tr>   
+                {% endfor %}
+            </tbody>
+        </table>
+            </div>
         {% else %}
             <p> Vous n'avez aucun abonné.</p>
         {% endif %}

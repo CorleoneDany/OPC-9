@@ -21,6 +21,10 @@
     background-color: #808d915e;
 }
 
+.inline-grid{
+    display: inline-grid;
+}
+
 .ticket_img{
     max-width:400px;
 }
