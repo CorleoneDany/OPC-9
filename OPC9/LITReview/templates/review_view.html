@@ -9,9 +9,12 @@
     </div>
     <h1> {{ post.headline }} </h1>
     <div class="ratings">
-        {% for star in post.ratings %}
-            <span class="fa fa-star checked"></span>
+        <text> Note : </text>
+        <text>
+        {% for star in post.stars_count %}
+            ★
         {% endfor %}
+        </text>
     </div>
     <p> {{ post.body }} </p>
     {% if post.user.id == request.user.id %}
