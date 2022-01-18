@@ -18,10 +18,18 @@
     </div>
     <p> {{ post.body }} </p>
     {% if post.user.id == request.user.id %}
-    <div class="col">
-        <form action="/update_review/{{post.id}}" method="GET">
-            <button type="submit" class="btn btn-primary bottom_space">Modifier votre critique.</button>
-        </form>
+    <div class="row">
+        <div class="col">
+            <form action="/update_review/{{post.id}}" method="GET">
+                <button type="submit" class="btn btn-primary bottom_space">Modifier votre critique.</button>
+            </form>
+        </div>
+        <div class="col">
+            <form action="/delete_review/{{post.id}}" method="POST">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger bottom_space">Supprimer votre critique.</button>
+            </form>
+        </div>
     </div>
     {% endif %}
 
@@ -40,10 +48,16 @@
             <img src="{{post.ticket.image.url}}" class="img-fluid ticket_img bottom_space" alt="Image du ticket : {{ post.ticket.title }}">
         {% endif %}
         <div class="row">
-            {% if post.ticket.user.id == request.ticket.user.id %}
+            {% if post.ticket.user.id == request.user.id %}
                 <div class="col">
                     <form action="/update_ticket/{{post.ticket.id}}" method="GET">
                         <button type="submit" class="btn btn-primary bottom_space">Modifier votre ticket.</button>
+                    </form>
+                </div>
+                <div class="col">
+                    <form action="/delete_ticket/{{post.ticket.id}}" method="POST">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger bottom_space">Supprimer votre ticket.</button>
                     </form>
                 </div>
             {% endif %}

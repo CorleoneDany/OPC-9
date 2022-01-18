@@ -111,7 +111,7 @@ def create_review(request):
     # create review and ticket
     if request.method == 'POST':
         review_form = ReviewForm(data=request.POST)
-        ticket_form = TicketForm(data=request.POST)
+        ticket_form = TicketForm(data=request.POST, files=request.FILES)
         if review_form.is_valid() and ticket_form.is_valid():
             save_new_review(ticket_form, request, review_form)
             return redirect('flux')
@@ -119,7 +119,6 @@ def create_review(request):
     return render(request, 'create_review.html', {"review_form": review_form, "ticket_form": ticket_form})
 
 
-@login_required
 def save_new_review(ticket_form, request, review_form):
     validated_ticket = ticket_form.save(commit=False)
     validated_ticket.user = request.user
@@ -248,6 +247,20 @@ def return_all_followings_list(request):
 
 @ login_required
 def delete_subscription(request, id_following):
-    Following = UserFollows.objects.get(pk=id_following)
-    Following.delete()
+    following = UserFollows.objects.get(pk=id_following)
+    following.delete()
+    return redirect('flux')
+
+
+@ login_required
+def delete_review(request, id_review):
+    review = Review.objects.get(pk=id_review)
+    review.delete()
+    return redirect('flux')
+
+
+@ login_required
+def delete_ticket(request, id_ticket):
+    ticket = Ticket.objects.get(pk=id_ticket)
+    ticket.delete()
     return redirect('flux')

@@ -15,17 +15,23 @@
         <img src="{{post.image.url}}" class="img-fluid ticket_img bottom_space" alt="Image du ticket : {{ post.title }}">
     {% endif %}
     <div class="row">
+        {% if post.responded == False%}
+            <div class="col">
+                <form action="/review_respond/{{post.id}}" method="GET">
+                    <button type="submit" class="btn btn-primary bottom_space">Créer une critique en réponse.</button>
+                </form>
+            </div>
+        {% endif %}
         {% if post.user.id == request.user.id %}
             <div class="col">
                 <form action="/update_ticket/{{post.id}}" method="GET">
                     <button type="submit" class="btn btn-primary bottom_space">Modifier votre ticket.</button>
                 </form>
             </div>
-        {% endif %}
-        {% if post.responded == False%}
             <div class="col">
-                <form action="/review_respond/{{post.id}}" method="GET">
-                    <button type="submit" class="btn btn-primary bottom_space">Créer une critique en réponse.</button>
+                <form action="/delete_ticket/{{post.id}}" method="POST">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger bottom_space">Supprimer votre ticket.</button>
                 </form>
             </div>
         {% endif %}
