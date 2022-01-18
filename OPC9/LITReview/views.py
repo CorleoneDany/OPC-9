@@ -7,7 +7,6 @@ from django.contrib.auth.decorators import login_required
 
 from .forms import ReviewForm, TicketForm, UserFollowsForm
 from .models import Ticket, Review, User, UserFollows
-from django.db.models import CharField, Value
 
 from itertools import chain
 
@@ -15,6 +14,7 @@ from itertools import chain
 
 
 def home(request):
+    """Print the main page."""
     if request.user.is_authenticated:
         return redirect('/flux')
 
@@ -29,6 +29,7 @@ def home(request):
 
 
 def connect_user(request, form):
+    """Connect the user."""
     username = form.cleaned_data.get('username')
     password = form.cleaned_data.get('password')
     user = authenticate(username=username, password=password)
@@ -36,6 +37,7 @@ def connect_user(request, form):
 
 
 def register(request):
+    """Register the user."""
     form = UserCreationForm()
     if request.method == 'POST':
         form = UserCreationForm(data=request.POST)
@@ -51,14 +53,16 @@ def register(request):
 
 
 def disconnect(request):
+    """Disconnect the user."""
     logout(request)
     return redirect('/')
 
 
 @login_required
 def profile(request):
+    """Render the users posts."""
     reviews = get_user_reviews(request)
-    tickets = get_user_posts(request)
+    tickets = get_user_tickets(request)
     posts = sort_posts(reviews, tickets)
 
     return render(request, 'profile.html', {'posts': posts})
@@ -66,6 +70,7 @@ def profile(request):
 
 @login_required
 def update_review(request, id_review=None):
+    """Update the chosen review."""
     review_instance = Review.objects.get(
         pk=id_review)
     ticket_instance = Ticket.objects.get(
@@ -75,7 +80,10 @@ def update_review(request, id_review=None):
         review_form = ReviewForm(instance=review_instance)
         review_id = review_instance.id
         post = ticket_instance
-        return render(request, 'update_review.html', {"review_form": review_form, "post": post, "review_id": review_id})
+        return render(request, 'update_review.html',
+                      {"review_form": review_form,
+                          "post": post, "review_id": review_id}
+                      )
 
     elif request.method == 'POST':
         review_form = ReviewForm(data=request.POST, instance=review_instance)
@@ -86,12 +94,16 @@ def update_review(request, id_review=None):
 
 @login_required
 def respond_to_ticket(request, id_ticket=None):
+    """Respond to the chosen ticket."""
     post = Ticket.objects.get(pk=id_ticket)
     review_form = ReviewForm()
 
     if request.method == 'GET':
         ticket_id = post.id
-        return render(request, 'review_respond.html', {"review_form": review_form, "post": post, 'ticket_id': ticket_id})
+        return render(request, 'review_respond.html',
+                      {"review_form": review_form,
+                          "post": post, 'ticket_id': ticket_id}
+                      )
 
     if request.method == 'POST':
         review_form = ReviewForm(data=request.POST)
@@ -105,6 +117,7 @@ def respond_to_ticket(request, id_ticket=None):
 
 @login_required
 def create_review(request):
+    """Create a review."""
     review_form = ReviewForm()
     ticket_form = TicketForm()
 
@@ -116,10 +129,12 @@ def create_review(request):
             save_new_review(ticket_form, request, review_form)
             return redirect('flux')
 
-    return render(request, 'create_review.html', {"review_form": review_form, "ticket_form": ticket_form})
+    return render(request, 'create_review.html',
+                  {"review_form": review_form, "ticket_form": ticket_form})
 
 
 def save_new_review(ticket_form, request, review_form):
+    """Save the new review."""
     validated_ticket = ticket_form.save(commit=False)
     validated_ticket.user = request.user
     validated_ticket.save()
@@ -131,6 +146,7 @@ def save_new_review(ticket_form, request, review_form):
 
 @login_required
 def create_ticket(request, id_ticket=None):
+    """Create a ticket."""
     ticket_instance = Ticket.objects.get(
         pk=id_ticket) if id_ticket is not None else None
     if request.method == 'GET':
@@ -147,12 +163,14 @@ def create_ticket(request, id_ticket=None):
 
 @login_required
 def update_ticket(request, id_ticket=None):
+    """Update the chosen ticket."""
     ticket_instance = Ticket.objects.get(
         pk=id_ticket) if id_ticket is not None else None
     if request.method == 'GET':
         ticket_form = TicketForm(instance=ticket_instance)
         ticket_id = ticket_instance.id
-        return render(request, 'update_ticket.html', {"ticket_form": ticket_form, "ticket_id": ticket_id})
+        return render(request, 'update_ticket.html',
+                      {"ticket_form": ticket_form, "ticket_id": ticket_id})
 
     elif request.method == 'POST':
         ticket_form = TicketForm(
@@ -164,6 +182,7 @@ def update_ticket(request, id_ticket=None):
 
 @login_required
 def save_ticket(request, form):
+    """Save the chosen ticket."""
     validated_form = form.save(commit=False)
     validated_form.user = request.user
     validated_form.save()
@@ -171,11 +190,13 @@ def save_ticket(request, form):
 
 @login_required
 def flux(request):
+    """Render the main menu."""
     posts = get_all_posts(request)
     return render(request, 'flux.html', {"posts": posts})
 
 
 def get_all_posts(request):
+    """Get all posts and sorts them."""
     followings = return_all_followings_list(request)
 
     reviews = Review.objects.filter(
@@ -194,6 +215,7 @@ def get_all_posts(request):
 
 
 def sort_posts(reviews, tickets):
+    """Sort post."""
     return sorted(
         chain(reviews, tickets),
         key=lambda post: post.time_created,
@@ -201,18 +223,21 @@ def sort_posts(reviews, tickets):
     )
 
 
-@ login_required
-def get_user_posts(request):
+@login_required
+def get_user_tickets(request):
+    """Get connected user's tickets."""
     return Ticket.objects.filter(user=request.user)
 
 
-@ login_required
+@login_required
 def get_user_reviews(request):
+    """Get connected user's reviews."""
     return Review.objects.filter(user=request.user)
 
 
-@ login_required
+@login_required
 def subscriptions(request):
+    """Render the subscriptions page."""
     followers = return_all_followers(request)
     followings = return_all_followings(request)
     form = UserFollowsForm
@@ -227,40 +252,47 @@ def subscriptions(request):
             validated_form.user = request.user
             validated_form.save()
             return redirect('flux')
-    return render(request, 'subscriptions.html', {"form": form, "followers": followers, "followings": followings})
+    return render(request, 'subscriptions.html',
+                  {"form": form, "followers": followers, "followings": followings})
 
 
-@ login_required
+@login_required
 def return_all_followers(request):
+    """Return all user's followers in user follow model."""
     return UserFollows.objects.filter(followed_user=request.user)
 
 
-@ login_required
+@login_required
 def return_all_followings(request):
+    """Return all user's followings in user follow model."""
     return UserFollows.objects.filter(user=request.user)
 
 
-@ login_required
+@login_required
 def return_all_followings_list(request):
+    """Return all user's followings."""
     return UserFollows.objects.filter(user=request.user).values_list('followed_user')
 
 
-@ login_required
+@login_required
 def delete_subscription(request, id_following):
+    """Delete chosen subscription."""
     following = UserFollows.objects.get(pk=id_following)
     following.delete()
     return redirect('flux')
 
 
-@ login_required
+@login_required
 def delete_review(request, id_review):
+    """Delete chosen review."""
     review = Review.objects.get(pk=id_review)
     review.delete()
     return redirect('flux')
 
 
-@ login_required
+@login_required
 def delete_ticket(request, id_ticket):
+    """Delete chosen ticket."""
     ticket = Ticket.objects.get(pk=id_ticket)
     ticket.delete()
     return redirect('flux')
