@@ -2,10 +2,8 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.db.models import CharField, Value
+from django.db.models import Q
 from django.contrib.auth.decorators import login_required
-
-import pprint
-
 
 from .forms import ReviewForm, TicketForm, UserFollowsForm
 from .models import Ticket, Review, User, UserFollows
@@ -174,15 +172,19 @@ def save_ticket(request, form):
 
 @login_required
 def flux(request):
-    posts = get_all_posts()
+    posts = get_all_posts(request)
     return render(request, 'flux.html', {"posts": posts})
 
 
-def get_all_posts():
-    reviews = Review.objects.all()
+def get_all_posts(request):
+    followings = return_all_followings_list(request)
+
+    reviews = Review.objects.filter(
+        Q(user__in=followings) | Q(user=request.user))
     reviews = reviews.annotate(content_type=Value('REVIEW', CharField()))
 
-    tickets = Ticket.objects.all()
+    tickets = Ticket.objects.filter(
+        Q(user__in=followings) | Q(user=request.user))
     tickets = tickets.annotate(content_type=Value('TICKET', CharField()))
 
     tickets_id_list = [review.ticket.id for review in reviews]
@@ -200,17 +202,17 @@ def sort_posts(reviews, tickets):
     )
 
 
-@login_required
+@ login_required
 def get_user_posts(request):
     return Ticket.objects.filter(user=request.user)
 
 
-@login_required
+@ login_required
 def get_user_reviews(request):
     return Review.objects.filter(user=request.user)
 
 
-@login_required
+@ login_required
 def subscriptions(request):
     followers = return_all_followers(request)
     followings = return_all_followings(request)
@@ -229,22 +231,22 @@ def subscriptions(request):
     return render(request, 'subscriptions.html', {"form": form, "followers": followers, "followings": followings})
 
 
-@login_required
+@ login_required
 def return_all_followers(request):
     return UserFollows.objects.filter(followed_user=request.user)
 
 
-@login_required
+@ login_required
 def return_all_followings(request):
     return UserFollows.objects.filter(user=request.user)
 
 
-@login_required
-def print_all_posts(reviews, tickets):
-    print(sort_posts(reviews, tickets))
+@ login_required
+def return_all_followings_list(request):
+    return UserFollows.objects.filter(user=request.user).values_list('followed_user')
 
 
-@login_required
+@ login_required
 def delete_subscription(request, id_following):
     Following = UserFollows.objects.get(pk=id_following)
     Following.delete()
