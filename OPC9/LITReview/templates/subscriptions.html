@@ -8,7 +8,7 @@
 
     <h1> Suivre d'autres utilisateurs. </h1>
     <div class='w-50 inline-grid'>
-        <form action="." metdod="POST" class="form-group">
+        <form action="." method="POST" class="form-group">
             {% csrf_token %}
             {{ form|crispy }}
             <div class= "text-center">
@@ -25,10 +25,13 @@
                 {% for following in followings  %}
                 <tr>
                     <td>
-                            <text class='align-middle'> {{ following }} </text>
+                        <text class='align-middle'> {{ following.followed_user }} </text>
                     </td>
                     <td>
-                            <button type="button" class="btn btn-primary">Se désabonner.</button>
+                        <form action="/delete_subscription/{{following.id}}" method="POST" class="form-group">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger">Se désabonner.</button>
+                        </form>
                     </td>
                 </tr>      
                 {% endfor %}

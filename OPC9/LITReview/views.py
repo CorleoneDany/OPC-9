@@ -1,9 +1,9 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from django.views.generic import TemplateView
 from django.db.models import CharField, Value
+from django.contrib.auth.decorators import login_required
+
 import pprint
 
 
@@ -57,6 +57,7 @@ def disconnect(request):
     return redirect('/')
 
 
+@login_required
 def profile(request):
     reviews = get_user_reviews(request)
     tickets = get_user_posts(request)
@@ -65,6 +66,7 @@ def profile(request):
     return render(request, 'profile.html', {'posts': posts})
 
 
+@login_required
 def update_review(request, id_review=None):
     review_instance = Review.objects.get(
         pk=id_review)
@@ -84,6 +86,7 @@ def update_review(request, id_review=None):
             return redirect('flux')
 
 
+@login_required
 def respond_to_ticket(request, id_ticket=None):
     post = Ticket.objects.get(pk=id_ticket)
     review_form = ReviewForm()
@@ -102,6 +105,7 @@ def respond_to_ticket(request, id_ticket=None):
             return redirect('flux')
 
 
+@login_required
 def create_review(request):
     review_form = ReviewForm()
     ticket_form = TicketForm()
@@ -117,6 +121,7 @@ def create_review(request):
     return render(request, 'create_review.html', {"review_form": review_form, "ticket_form": ticket_form})
 
 
+@login_required
 def save_new_review(ticket_form, request, review_form):
     validated_ticket = ticket_form.save(commit=False)
     validated_ticket.user = request.user
@@ -127,6 +132,7 @@ def save_new_review(ticket_form, request, review_form):
     validated_review.save()
 
 
+@login_required
 def create_ticket(request, id_ticket=None):
     ticket_instance = Ticket.objects.get(
         pk=id_ticket) if id_ticket is not None else None
@@ -135,13 +141,14 @@ def create_ticket(request, id_ticket=None):
         return render(request, 'create_ticket.html', {"form": form})
 
     elif request.method == 'POST':
-        form = TicketForm(data=request.POST)
+        form = TicketForm(data=request.POST, files=request.FILES)
         if form.is_valid():
             save_ticket(request, form)
             return redirect('flux')
     return render(request, 'create_ticket.html', {"form": form})
 
 
+@login_required
 def update_ticket(request, id_ticket=None):
     ticket_instance = Ticket.objects.get(
         pk=id_ticket) if id_ticket is not None else None
@@ -151,18 +158,21 @@ def update_ticket(request, id_ticket=None):
         return render(request, 'update_ticket.html', {"ticket_form": ticket_form, "ticket_id": ticket_id})
 
     elif request.method == 'POST':
-        ticket_form = TicketForm(data=request.POST, instance=ticket_instance)
+        ticket_form = TicketForm(
+            data=request.POST, instance=ticket_instance, files=request.FILES)
         if ticket_form.is_valid():
             ticket_form.save()
             return redirect('flux')
 
 
+@login_required
 def save_ticket(request, form):
     validated_form = form.save(commit=False)
     validated_form.user = request.user
     validated_form.save()
 
 
+@login_required
 def flux(request):
     posts = get_all_posts()
     return render(request, 'flux.html', {"posts": posts})
@@ -190,14 +200,17 @@ def sort_posts(reviews, tickets):
     )
 
 
+@login_required
 def get_user_posts(request):
     return Ticket.objects.filter(user=request.user)
 
 
+@login_required
 def get_user_reviews(request):
     return Review.objects.filter(user=request.user)
 
 
+@login_required
 def subscriptions(request):
     followers = return_all_followers(request)
     followings = return_all_followings(request)
@@ -216,14 +229,23 @@ def subscriptions(request):
     return render(request, 'subscriptions.html', {"form": form, "followers": followers, "followings": followings})
 
 
+@login_required
 def return_all_followers(request):
     return UserFollows.objects.filter(followed_user=request.user)
 
 
+@login_required
 def return_all_followings(request):
-    followings = UserFollows.objects.filter(user=request.user)
-    return [following.followed_user for following in followings]
+    return UserFollows.objects.filter(user=request.user)
 
 
+@login_required
 def print_all_posts(reviews, tickets):
     print(sort_posts(reviews, tickets))
+
+
+@login_required
+def delete_subscription(request, id_following):
+    Following = UserFollows.objects.get(pk=id_following)
+    Following.delete()
+    return redirect('flux')

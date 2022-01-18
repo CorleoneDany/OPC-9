@@ -10,7 +10,7 @@
         <h1>Modifier un ticket.</h1>
     </div>
 
-    <form action="/update_ticket/{{ticket_id}}" method="POST" class="form-group">
+    <form action="/update_ticket/{{ticket_id}}" method="POST" class="form-group" enctype="multipart/form-data">
         {% csrf_token %}
         {{ ticket_form|crispy }}
         <div class= "text-center">

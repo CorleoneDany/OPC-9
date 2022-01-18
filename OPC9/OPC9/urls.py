@@ -37,4 +37,6 @@ urlpatterns = [
     path('review_respond/', views.respond_to_ticket, name='review_respond'),
     path('review_respond/<int:id_ticket>',
          views.respond_to_ticket, name='review_respond'),
+    path('delete_subscription/<int:id_following>',
+         views.delete_subscription, name='delete_subscription')
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

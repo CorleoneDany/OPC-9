@@ -6,7 +6,7 @@
 <div class="container">
 
     <h1>Créer un ticket.</h1>
-    <form action="." method="POST" class="form-group">
+    <form action="." method="POST" class="form-group" enctype="multipart/form-data">
         {% csrf_token %}
         {{ form|crispy }}
         <div class= "text-center">
